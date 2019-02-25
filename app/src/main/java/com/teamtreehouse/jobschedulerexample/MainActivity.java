@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 setRecordOfJobs("START");
 
             if (message == 100)
-                setRecordOfJobs("END  ");
+                setRecordOfJobs("END   ");
 
         }
     };
