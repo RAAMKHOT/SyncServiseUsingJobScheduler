@@ -13,6 +13,7 @@ import com.simplymadeapps.quickperiodicjobscheduler.QuickJobFinishedCallback;
 import com.simplymadeapps.quickperiodicjobscheduler.QuickPeriodicJob;
 import com.simplymadeapps.quickperiodicjobscheduler.QuickPeriodicJobCollection;
 
+//TODO : reference Link : https://github.com/simplymadeapps/QuickPeriodicJobScheduler
 public class MyAppliction extends Application {
 
     @Override
@@ -54,7 +55,7 @@ public class MyAppliction extends Application {
             Log.e("Status", i + "%");
             sendMessageToActivity(this, i);
             try {
-                Thread.sleep(100);
+                Thread.sleep(150);
             } catch (Exception e) {
             }
         }
@@ -67,4 +68,6 @@ public class MyAppliction extends Application {
         intent.putExtra("Status", status);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
+
+
 }

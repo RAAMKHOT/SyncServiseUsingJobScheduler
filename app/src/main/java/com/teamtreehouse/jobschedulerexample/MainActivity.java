@@ -12,11 +12,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.simplymadeapps.quickperiodicjobscheduler.QuickPeriodicJobScheduler;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -24,14 +31,27 @@ public class MainActivity extends AppCompatActivity {
     private JobInfo jobInfo;
     private ProgressBar progressBar;
     private TextView textViewPresentege;
+    private ListView recordsListView;
+    ArrayAdapter<String> adapter;
+
+    public ArrayList<String> mRecordsTitles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        QuickPeriodicJobScheduler jobScheduler = new QuickPeriodicJobScheduler(this);
+        jobScheduler.start(JOBID, 20 * 1000); // Run job with jobId=1 every 60 seconds
+        //jobScheduler.stop(JOBID);
+
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         textViewPresentege = (TextView) findViewById(R.id.textViewPresentege);
+        recordsListView = (ListView) findViewById(R.id.recordsListView);
+        mRecordsTitles = new ArrayList<>();
+
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mRecordsTitles);
+        recordsListView.setAdapter(adapter);
 
 
         findViewById(R.id.buttonStart).setOnClickListener(new View.OnClickListener() {
@@ -47,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 stopJob();
             }
         });
+        findViewById(R.id.buttonStart).setVisibility(View.GONE);
         findViewById(R.id.buttonStop).setVisibility(View.GONE);
 
 
@@ -62,6 +83,12 @@ public class MainActivity extends AppCompatActivity {
             textViewPresentege.setText(message + "%");
             textViewPresentege.setTextColor(getResources().getColor(message > 50 ? android.R.color.black : android.R.color.white));
             Log.e("RAAM", "" + message);
+            if (message == 0)
+                setRecordOfJobs("START");
+
+            if (message == 100)
+                setRecordOfJobs("END  ");
+
         }
     };
 
@@ -88,10 +115,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Job not started!", Toast.LENGTH_SHORT).show();
         }*/
-
-        QuickPeriodicJobScheduler jobScheduler = new QuickPeriodicJobScheduler(this);
-        jobScheduler.start(JOBID, 20 * 1000); // Run job with jobId=1 every 60 seconds
-        //jobScheduler.stop(JOBID);
     }
 
     private void stopJob() {
@@ -120,5 +143,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return hasBeenScheduled;
+    }
+
+    private void setRecordOfJobs(String status) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        System.out.println(dateFormat.format(date)); //2016/11/16 12:08:43
+        mRecordsTitles.add(status+" - > "+dateFormat.format(date));
+        adapter.notifyDataSetChanged();
     }
 }
