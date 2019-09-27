@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
                 //.setMinimumLatency(1 * 1000).setOverrideDeadline(3 * 1000)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
                 .build();
-
         JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
         int resultCode = jobScheduler.schedule(jobInfo);
         if (resultCode == JobScheduler.RESULT_SUCCESS) {
